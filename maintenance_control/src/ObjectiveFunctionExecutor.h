@@ -1,0 +1,17 @@
+#ifndef OBJECTIVEFUNCTIONEXECUTOR_H
+#define OBJECTIVEFUNCTIONEXECUTOR_H
+
+#include "ros/ros.h"
+#include <moveit/move_group_interface/move_group_interface.h>
+
+class ObjectiveFunctionExecutor {
+    public:
+        virtual ~ObjectiveFunctionExecutor(){}
+        virtual void execute (moveit::planning_interface::MoveGroupInterface &move_group, const robot_state::JointModelGroup* joint_model_group, moveit::core::RobotStatePtr currentState) = 0;
+        virtual const char* tellFeedbackTopic () = 0;
+
+        const char* feedbackTopic;
+        ros::Publisher successPublisher;
+};
+
+#endif
