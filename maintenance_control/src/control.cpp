@@ -3,12 +3,6 @@
 ObjectiveFunctionExecutor *executor;
 std::mutex mtx;
 
-void feedbackCallback (const std_msgs::Bool::ConstPtr& msg) {
-    if (msg->data) {
-        mtx.unlock();
-    }
-}
-
 int main (int argc, char* argv[]) {
 
     ros::init(argc, argv, "control");
@@ -21,18 +15,19 @@ int main (int argc, char* argv[]) {
     // setup moveit
     static const std::string PLANNING_GROUP = "manipulator";
     moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
+    //move_group.setEndeffectorLink("gripper");
     const robot_state::JointModelGroup* joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
     moveit::core::RobotStatePtr currentState;
 
     // move to inital pose
-    if (!move_to_initial_pose(move_group, joint_model_group, currentState)) {
-        std::cout << "Could not move to inital position!" << std::endl;
-        exit (EXIT_FAILURE);
-    }
+    //if (!move_to_initial_pose(move_group, joint_model_group, currentState)) {
+    //    std::cout << "Could not move to inital position!" << std::endl;
+    //    exit (EXIT_FAILURE);
+    //}
 
     // check if there are enough arguments and assign current objective to variable
     if (argc < 1) {
-        ROS_INFO("There are not enough arguments given for the control node!");
+        std::cout << "There are not enough arguments given for the control node!" << std::endl;
         exit (EXIT_FAILURE);
     }
 
@@ -48,31 +43,25 @@ int main (int argc, char* argv[]) {
     }
 
     for (int i = start; i <= stop; i++) {
-        mtx.lock();
         switch (i) {
             case 1: executor = new ObjectiveFunction1Executor(n); break;
-            case 2: executor = new ObjectiveFunction2Executor(n, argv[2][0]-'0', argv[3][0]-'0', argv[4][0]-'0', argv[5][0]-'0'); break;
-            /*case '3': executor = new ObjectiveFunction3Executor(); break;
-            case '4': executor = new ObjectiveFunction4Executor(); break;
-            case '5': executor = new ObjectiveFunction5Executor(); break;
-            case '6': executor = new ObjectiveFunction6Executor(); break;
-            case '7': executor = new ObjectiveFunction7Executor(); break;
-            case '8': executor = new ObjectiveFunction8Executor(); break;
-            case '9': executor = new ObjectiveFunction9Executor(); break;*/
+            case 2: executor = new ObjectiveFunction2Executor(n, 1, argv[2][0]-'0'); break;
+            //case 3: executor = new ObjectiveFunction3Executor(); break;
+            //case 4: executor = new ObjectiveFunction4Executor(); break;
+            //case 5: executor = new ObjectiveFunction5Executor(); break;
+            //case 6: executor = new ObjectiveFunction6Executor(); break;
+            //case 7: executor = new ObjectiveFunction7Executor(); break;
+            //case 8: executor = new ObjectiveFunction8Executor(); break;
+            //case 9: executor = new ObjectiveFunction9Executor(); break;
             default: ROS_INFO("No valid objective function given!"); exit (EXIT_FAILURE);
         }
 
-        const char* feedbackTopic = executor->tellFeedbackTopic();
+        bool success = executor->execute(move_group, joint_model_group, currentState);
 
-        ros::Subscriber sub = n.subscribe(feedbackTopic, 10, feedbackCallback);
-
-        executor->execute(move_group, joint_model_group, currentState);
-
-        while (ros::ok()){
-            ros::spinOnce();
-            if (mtx.try_lock()) {
-                delete executor;
-            }
+        if (success){
+            delete executor;
+        } else {
+            std::cout << "Objective " << i << " failed!" << std::endl;
         }
     }
 }

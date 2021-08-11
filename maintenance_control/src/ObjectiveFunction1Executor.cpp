@@ -1,6 +1,10 @@
 #include "ObjectiveFunctionExecutors.h"
 #include "geometry_msgs/Pose.h"
 
+//########################################################################################################
+//#################### Callback methods for subscribers ##################################################
+//########################################################################################################
+
 void ObjectiveFunction1Executor::marker_1_searcher_callback(const geometry_msgs::Pose::ConstPtr& msg) {
     this->marker_1_detected = true;
     if (this->marker_9_detected) {
@@ -15,21 +19,26 @@ void ObjectiveFunction1Executor::marker_9_searcher_callback(const geometry_msgs:
     }
 }
 
+//##################################################################################################
+//#################### Constructor and Destructor ##################################################
+//##################################################################################################
+
 ObjectiveFunction1Executor::ObjectiveFunction1Executor(ros::NodeHandle nHandle){
     this->nHandle = nHandle;
-    this->feedbackTopic = "objective1successful";
-    this->feedbackPublisher = this->nHandle.advertise<std_msgs::Bool>(this->feedbackTopic, 10);
     this->marker_1_detected = false;
-    this->marker_9_detected = true;
+    this->marker_9_detected = false;
     this->both_detected = false;
-    
 }
 
 ObjectiveFunction1Executor::~ObjectiveFunction1Executor(){
     std::cout << "Objective 1 successfully finished" << std::endl;
 }
 
-void ObjectiveFunction1Executor::execute(moveit::planning_interface::MoveGroupInterface &move_group, const robot_state::JointModelGroup* joint_model_group, moveit::core::RobotStatePtr currentState) {
+//#############################################################################################
+//#################### Public member methods ##################################################
+//#############################################################################################
+
+bool ObjectiveFunction1Executor::execute(moveit::planning_interface::MoveGroupInterface &move_group, const robot_state::JointModelGroup* joint_model_group, moveit::core::RobotStatePtr currentState) {
 
     // drive to a position where the whole middle panel can be seen
     if (move_to_overview_pose(move_group, joint_model_group, currentState)) {
@@ -41,23 +50,9 @@ void ObjectiveFunction1Executor::execute(moveit::planning_interface::MoveGroupIn
         duration.sleep();
 
         if (this->both_detected) {
-            std_msgs::Bool msg;
-            msg.data = true;
-            feedbackPublisher.publish(msg);
+            return true;
         } else {
-            std::cout << "Task failed" << std::endl;
+            return false;
         }
     }
 }
-
-const char* ObjectiveFunction1Executor::tellFeedbackTopic() {
-    return this->feedbackTopic;
-}
-
-
-    /*geometry_msgs::Pose targetPose1;
-    targetPose1.orientation.w = 1.0;
-    targetPose1.position.x = 3;
-    targetPose1.position.y = 3;
-    targetPose1.position.z = 3;
-    move_group.setPoseTarget(targetPose1);*/

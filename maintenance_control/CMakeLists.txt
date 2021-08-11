@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   moveit_ros_planning_interface
+  tf2_ros
+  tf2_geometry_msgs
   std_msgs
 )
 
@@ -206,8 +208,15 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(control src/control.cpp src/ObjectiveFunction1Executor.cpp src/ObjectiveFunction2Executor.cpp src/moveit_utils.cpp)
+add_executable(control src/control.cpp src/ObjectiveFunction1Executor.cpp src/ObjectiveFunction2Executor.cpp src/moveit_utils.cpp src/maintenance_utils.cpp)
 target_link_libraries(control ${catkin_LIBRARIES})
 
 find_package(Eigen3 REQUIRED)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
+
+find_package(tf2_ros REQUIRED)
+include_directories(include ${TF2_ROS_INCLUDE_DIRS})
+
+find_package(tf2_geometry_msgs REQUIRED)
+include_directories(include ${TF2_GEOMETRY_MSGS_INCLUDE_DIRS})
+  

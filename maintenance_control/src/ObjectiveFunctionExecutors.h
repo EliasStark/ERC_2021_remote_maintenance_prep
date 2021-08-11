@@ -7,13 +7,15 @@
 
 #include "ros/ros.h"
 #include "std_msgs/Bool.h"
+#include "std_msgs/String.h"
+#include "geometry_msgs/Pose.h"
 #include "ObjectiveFunction1Executor.h"
 #include "ObjectiveFunction2Executor.h"
 #include "moveit_utils.h"
+#include "maintenance_utils.h"
 
 #include <moveit/move_group_interface/move_group_interface.h>
 
-//#include <moveit_visual_tools/moveit_visual_tools.h>
 /*#include "ObjectiveFunction3Executor.h"
 #include "ObjectiveFunction4Executor.h"
 #include "ObjectiveFunction5Executor.h"

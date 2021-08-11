@@ -1,0 +1,7 @@
+<launch>
+
+    <include file="$(find aruco_ros)/launch/double.launch"/>
+
+    <node name="control" pkg="maintenance_control" type="control" args="2 1" output="screen"/>
+
+</launch>

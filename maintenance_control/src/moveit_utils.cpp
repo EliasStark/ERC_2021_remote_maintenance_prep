@@ -2,6 +2,17 @@
 
 bool move_to_pose (moveit::planning_interface::MoveGroupInterface &move_group, geometry_msgs::Pose pose) {
 
+    move_group.setPoseTarget(pose);
+    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+    bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    std::cout << (success ? "Planning to pose in catesian space worked" : "Planning to pose in cartesian space failed") << std::endl;
+
+    if (success) {
+        move_group.move();
+        return true;
+    }
+
+    return false;
 }
 
 bool move_in_joint_space (moveit::planning_interface::MoveGroupInterface &move_group, std::vector<double> joint_group_positions) {

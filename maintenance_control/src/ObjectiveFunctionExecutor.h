@@ -7,11 +7,7 @@
 class ObjectiveFunctionExecutor {
     public:
         virtual ~ObjectiveFunctionExecutor(){}
-        virtual void execute (moveit::planning_interface::MoveGroupInterface &move_group, const robot_state::JointModelGroup* joint_model_group, moveit::core::RobotStatePtr currentState) = 0;
-        virtual const char* tellFeedbackTopic () = 0;
-
-        const char* feedbackTopic;
-        ros::Publisher successPublisher;
+        virtual bool execute (moveit::planning_interface::MoveGroupInterface &move_group, const robot_state::JointModelGroup* joint_model_group, moveit::core::RobotStatePtr currentState) = 0;
 };
 
 #endif
