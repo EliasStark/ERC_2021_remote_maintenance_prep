@@ -23,14 +23,14 @@ void ObjectiveFunction1Executor::marker_9_searcher_callback(const geometry_msgs:
 //#################### Constructor and Destructor ##################################################
 //##################################################################################################
 
-ObjectiveFunction1Executor::ObjectiveFunction1Executor(ros::NodeHandle nHandle){
+ObjectiveFunction1Executor::ObjectiveFunction1Executor(ros::NodeHandle nHandle) {
     this->nHandle = nHandle;
     this->marker_1_detected = false;
     this->marker_9_detected = false;
     this->both_detected = false;
 }
 
-ObjectiveFunction1Executor::~ObjectiveFunction1Executor(){
+ObjectiveFunction1Executor::~ObjectiveFunction1Executor() {
     std::cout << "Objective 1 successfully finished" << std::endl;
 }
 

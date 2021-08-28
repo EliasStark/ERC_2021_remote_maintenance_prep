@@ -208,7 +208,7 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(control src/control.cpp src/ObjectiveFunction1Executor.cpp src/ObjectiveFunction2Executor.cpp src/moveit_utils.cpp src/maintenance_utils.cpp)
+add_executable(control src/control.cpp src/ObjectiveFunction1Executor.cpp src/ObjectiveFunction2Executor.cpp src/ObjectiveFunction3Executor.cpp src/ObjectiveFunction9Executor.cpp src/moveit_utils.cpp src/maintenance_utils.cpp)
 target_link_libraries(control ${catkin_LIBRARIES})
 
 find_package(Eigen3 REQUIRED)

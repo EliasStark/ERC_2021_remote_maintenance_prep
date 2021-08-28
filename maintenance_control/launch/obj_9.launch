@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="control" pkg="maintenance_control" type="control" args="9" output="screen"/>
+
+</launch>
